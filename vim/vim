@@ -1,0 +1,330 @@
+" MAIN CUSTOMIZATION FILE
+"
+" GLOBAL SETTINGS
+"
+colorscheme torte 
+"colorscheme pablo, torte, ron
+"colorscheme desert, elford, koehler, morning, peachpuff, slate
+
+" Mark column for comments (80), laptop edge of screen (195).
+" set colorcolumn=80,195
+
+" Turn syntax highlighting on
+syntax on
+set nocompatible
+set rtp+=$GOROOT/misc/vim
+set number
+set softtabstop=4
+set mouse=a
+
+" Mark the current line with an underline.
+set cursorline
+
+" random gabe tweaks
+set hidden
+set title
+let mapleader = ","
+
+"set listchars=tab:>-,trail:·,eol:$
+set listchars=eol:$,tab:>-,trail:·,extends:>,precedes:<,space:␣,nbsp:~
+nmap <silent> <leader>s :set nolist!<CR>
+
+" Start scrolling text when near top/bottom of screen.
+set so=5
+
+" Absolute and relative line numbering.
+set nu
+
+" Write contents of the file, if it has been modified, on buffer exit
+set autowrite
+
+" Allow backspacing over everything
+set backspace=indent,eol,start
+
+" Insert mode completion options
+set completeopt=menu,longest,preview
+
+" Use UTF-8 as the default buffer encoding
+set enc=utf-8
+
+" Remember up to 100 'colon' commmands and search patterns
+set history=1000
+
+" Enable incremental search
+set incsearch
+
+" Always show status line, even for one window
+set laststatus=2
+
+" Jump to matching bracket for 2/10th of a second (works with showmatch)
+"set matchtime=2
+
+" Don't highlight results of a search
+"set nohlsearch
+
+" Do highlight results of a search
+set hlsearch
+
+" Enable CTRL-A/CTRL-X to work on octal and hex numbers, as well as characters
+set nrformats=octal,hex,alpha
+
+" Use F10 to toggle 'paste' mode
+set pastetoggle=<F10>
+
+" Show line, column number, and relative position within a file in the status line
+set ruler
+
+" Scroll when cursor gets within 3 characters of top/bottom edge
+set scrolloff=3
+
+" Round indent to multiple of 'shiftwidth' for > and < commands
+set shiftround
+
+" Enable autoindent
+set autoindent
+
+" Enable smartindent
+set smartindent
+
+" Use 4 spaces for (auto)indent
+set shiftwidth=4
+
+" Expand tabs (\t) to spaces
+set expandtab
+
+" Show (partial) commands (or size of selection in Visual mode) in the status line
+set showcmd
+
+" When a bracket is inserted, briefly jump to a matching one
+set showmatch
+
+" Don't request terminal version string (for xterm)
+set t_RV=
+
+" Use 4 spaces for <Tab> and :retab
+set tabstop=4
+
+" Write swap file to disk after every 50 characters
+set updatecount=20
+
+" Remember things between sessions
+"
+" '20  - remember marks for 20 previous files
+" \"50 - save 50 lines for each register
+" :20  - remember 20 items in command-line history
+" %    - remember the buffer list (if vim started without a file arg)
+" n    - set name of viminfo file
+set viminfo='20,\"50,:20,%,n~/.vim/.viminfo
+
+" Use menu to show command-line completion (in 'full' case)
+set wildmenu
+
+" Set command-line completion mode:
+"   - on first <Tab>, when more than one match, list all matches and complete
+"     the longest common  string
+"   - on second <Tab>, complete the next full match and show menu
+set wildmode=list:longest,full
+
+" Go back to the position the cursor was on the last time this file was edited
+au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")|execute("normal `\"")|endif
+
+" Fix my <Backspace> key (in Mac OS X Terminal)
+"set t_kb=
+"fixdel
+
+
+
+
+" Only do this part when compiled with support for autocommands
+" Enable file type detection
+" Turn on auto-indentation based on file type if available.
+if has("autocmd")
+	filetype plugin indent on
+endif
+
+set splitbelow
+set splitright
+
+"split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"call plug#begin('~/.vim/plugin')
+"Plug 'scrooloose/nerdtree', { 'on':'NERDTreeToggle'}
+"
+" stupid konsole:
+"set background=light
+
+
+""""""""""""""""""""""""""""""
+" => Python section
+""""""""""""""""""""""""""""""
+let python_highlight_all = 1
+au FileType python syn keyword pythonDecorator True None False self
+
+au BufNewFile,BufRead *.jinja set syntax=htmljinja
+au BufNewFile,BufRead *.mako set ft=mako
+
+au FileType python map <buffer> F :set foldmethod=indent<cr>
+
+au FileType python inoremap <buffer> $r return 
+au FileType python inoremap <buffer> $i import 
+au FileType python inoremap <buffer> $p print 
+au FileType python inoremap <buffer> $f # --- <esc>a
+au FileType python map <buffer> <leader>1 /class 
+au FileType python map <buffer> <leader>2 /def 
+au FileType python map <buffer> <leader>C ?class 
+au FileType python map <buffer> <leader>D ?def 
+
+
+""""""""""""""""""""""""""""""
+" => JavaScript section
+"""""""""""""""""""""""""""""""
+au FileType javascript call JavaScriptFold()
+au FileType javascript setl fen
+au FileType javascript setl nocindent
+
+au FileType javascript imap <C-t> $log();<esc>hi
+au FileType javascript imap <C-a> alert();<esc>hi
+
+au FileType javascript inoremap <buffer> $r return 
+au FileType javascript inoremap <buffer> $f // --- PH<esc>FP2xi
+
+function! JavaScriptFold() 
+    setl foldmethod=syntax
+    setl foldlevelstart=1
+    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+
+    function! FoldText()
+        return substitute(getline(v:foldstart), '{.*', '{...}', '')
+    endfunction
+    setl foldtext=FoldText()
+endfunction
+
+
+""""""""""""""""""""""""""""""
+" => CoffeeScript section
+"""""""""""""""""""""""""""""""
+function! CoffeeScriptFold()
+    setl foldmethod=indent
+    setl foldlevelstart=1
+endfunction
+au FileType coffee call CoffeeScriptFold()
+
+au FileType gitcommit call setpos('.', [0, 1, 1, 0])
+
+
+""""""""""""""""""""""""""""""
+" => Shell section
+""""""""""""""""""""""""""""""
+if exists('$TMUX') 
+    if has('nvim')
+        set termguicolors
+    else
+        set term=screen-256color 
+    endif
+endif
+
+
+""""""""""""""""""""""""""""""
+" => Twig section
+""""""""""""""""""""""""""""""
+autocmd BufRead *.twig set syntax=html filetype=html
+
+
+""""""""""""""""""""""""""""""
+" => Markdown
+""""""""""""""""""""""""""""""
+let vim_markdown_folding_disabled = 1
+
+
+autocmd FileType py setlocal ts=4 sts=4 sw=4 expandtab
+
+" Syntax of these languages is fussy over tabs Vs spaces
+autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
+autocmd FileType yaml setlocal ts=4 sts=2 sw=2 expandtab
+
+" Customisations based on house-style (arbitrary)
+autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType css setlocal ts=4 sts=2 sw=2 expandtab
+autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+
+" Treat .rss files as XML
+autocmd BufNewFile,BufRead *.rss setfiletype xml
+
+" built in autocomplete
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+
+" Avoid loading MatchParen plugin
+let loaded_matchparen = 1
+
+" netRW: Open files in a split window
+let g:netrw_browse_split = 1
+
+"
+" MAPPINGS
+"
+" save changes
+"map ,s :w<CR>
+" exit vim without saving any changes
+map ,q :q!<CR>
+" exit vim saving changes
+"map ,w :x<CR>
+" switch to upper/lower window quickly
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+" use CTRL-F for omni completion
+imap <C-F> 
+" map CTRL-L to piece-wise copying of the line above the current one
+imap <C-L> @@@<ESC>hhkywjl?@@@<CR>P/@@@<CR>3s
+" map ,f to display all lines with keyword under cursor and ask which one to
+" jump to
+nmap ,f [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+" use <F6> to toggle line numbers
+nmap <silent> <F6> :set number!<CR>
+" use <F7><F8> to move on tabs
+map <F7> :tabp<CR>
+map <F8> :tabn<CR>
+" page down with <Space>
+"nmap <Space> <PageDown>
+" open filename under cursor in a new window (use current file's working
+" directory)
+nmap gf :new %:p:h/<cfile><CR>
+" map <Alt-p> and <Alt-P> to paste below/above and reformat
+nnoremap <Esc>P  P'[v']=
+nnoremap <Esc>p  p'[v']=
+" visual shifting (does not exit Visual mode)
+vnoremap < <gv
+vnoremap > >gv
+
+" Make it easy to remap tags
+nmap <silent> <F4>
+        \ :!ectags -f ./tags
+        \ --langmap="php:+.inc"
+        \ -h ".php.inc" -R --totals=yes
+        \ --tag-relative=yes --PHP-kinds=+cf-v .<CR>
+set tags=./tags,tags
+
+" Generic highlight changes
+highlight Comment cterm=none ctermfg=Gray
+highlight IncSearch cterm=none ctermfg=Black ctermbg=DarkYellow
+highlight Search cterm=none ctermfg=Black ctermbg=DarkYellow
+highlight String cterm=none ctermfg=DarkGreen
+highlight treeDir cterm=none ctermfg=Cyan
+highlight treeUp cterm=none ctermfg=DarkYellow
+highlight treeCWD cterm=none ctermfg=DarkYellow
+highlight netrwDir cterm=none ctermfg=Cyan
+
+" Set the <Leader> for combo commands
+"
+
+" gvim settings
+"set guioptions=
+"set guioptions+=ae
