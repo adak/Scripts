@@ -1,1 +1,48 @@
+# update & upgrade
+sudo apt update && apt upgrade
+
+# create user
+adduser <username>
+
+# install packages
+apt install tilix maltego metasploit-framework burpsuite wireshark aircrack-ng hydra nmap beef-xss nikto
+
+# install tor
+echo 'deb https://deb.torproject.org/torproject.org stretch main
+deb-src https://deb.torproject.org/torproject.org stretch main' > /etc/apt/sources.list.d/tor.list
+wget -O- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | sudo apt-key add -
+apt-get update
+apt-get install tor deb.torproject.org-keyring
+
+# install code editor and missing dependencies
+apt-get install gvfs gvfs-common gvfs-daemons gvfs-libs gconf-service gconf2 gconf2-common gvfs-bin psmisc
+dpkg -i ~/Downloads/atom-amd64.deb
+
+# USB-Rubber-Ducky
+git clone https://github.com/hak5darren/USB-Rubber-Ducky
+cd USB-Rubber-Ducky/Encoder/
+java -jar encoder.jar -i input_payload.txt -o inject.bin
+
+# change default ssh
+cd /etc/ssh/
+dpkg-reconfigure openssh-server
+
+# change root password
+passwd root
+
+sudo apt install kali-linux-default
+sudo apt install openvpn wireshark ffmpeg vlc git openssh-server openssh-client ufw gdebi tlp tilix sublime-text code atom
+
+sudo adduser your_username
+
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
+sudo echo "deb http://http.kali.org/kali/ kali-rolling main non-free contrib" | sudo tee /etc/apt/sources.list
+
+sudo dpkg-reconfigure keyboard-configuration
+
+sudo service ssh start
+
+sudo ufw enable
+
+
 
